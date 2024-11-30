@@ -3,18 +3,17 @@
   import type { LayoutData } from "./$types";
   import "../vars.css";
   import "../app.css";
-  import Moon from "$lib/icons/Moon.svelte";
-  import Sun from "$lib/icons/Sun.svelte";
+  import { Moon, Sun, Load } from "$lib/icons";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
-  let flag = false;
+  let flag = { first: false, allButFirst: false };
   let theme: "dark" | "light" = $state()!;
 
-  let ThemeToggle = $state(Moon);
+  let ThemeToggle = $state(Load);
 
   $effect(() => {
-    if (!flag) {
+    if (!flag.first) {
       theme = document.documentElement.dataset.theme as typeof theme;
 
       const userPrefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -22,13 +21,21 @@
       if (!userSetManually) {
         setTheme(userPrefersDarkMode ? "dark" : "light");
       }
+
+      setTimeout(() => {
+        ThemeToggle = theme === "dark" ? Sun : Moon;
+      }, 1000);
     }
-    flag = true;
+    flag.first = true;
   });
 
   $effect(() => {
-    ThemeToggle = theme === "dark" ? Sun : Moon;
-    console.log(theme);
+    theme;
+
+    if (flag.allButFirst) {
+      ThemeToggle = theme === "dark" ? Sun : Moon;
+    }
+    flag.allButFirst = true;
   });
 
   function setTheme(themeTo: "dark" | "light") {
@@ -49,7 +56,7 @@
       <span>Scratch Addons Suggestions</span>
     </a>
 
-    <button class="theme-toggle" onclick={toggleTheme}>
+    <button class="theme-toggle" onclick={toggleTheme} class:spin={ThemeToggle === Load}>
       <ThemeToggle />
     </button>
   </nav>
@@ -89,10 +96,14 @@
 
   .theme-toggle {
     background-color: var(--header);
+    transition: background-color 200ms;
     border: none;
     padding: 0.5rem;
     margin: 0.5rem;
     border-radius: 0.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     :global {
       svg {
@@ -105,7 +116,7 @@
       }
     }
 
-    &:hover {
+    &:hover:not(.spin) {
       background-color: white;
 
       :global {
@@ -116,9 +127,22 @@
         }
       }
     }
+
+    :global(&.spin) {
+      animation: spin 1s linear infinite;
+    }
   }
 
   main {
     padding: 0.5rem;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>
