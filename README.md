@@ -9,7 +9,7 @@ Clone the repo. If you don't know how to do that, this probably isn't the projec
 
 Install dependencies with pnpm, I forget to do this all the time.
 
-Then run `pnpm dev` to start the dev server, and it will by default be available at http://localhost:5173/
+Then run `pnpm dev` to start the dev server, and it will by default be available at <http://localhost:5173/>
 
 Right now there is no need for enviroment variables, but they will probably be needed eventually, if I remember I'll update this to include instructions on how to set them up.
 
