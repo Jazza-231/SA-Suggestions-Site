@@ -1,0 +1,17 @@
+:root {
+  --brand: #ff7b26;
+  --background: #ffffff;
+  --text: #000000;
+  --text-on-brand: #ffffff;
+
+  --header: var(--brand);
+}
+
+:root[data-theme="dark"] {
+  --brand: #ff7b26;
+  --background: #121212;
+  --text: #ffffff;
+  --text-on-brand: #ffffff;
+
+  --header: #242424;
+}
