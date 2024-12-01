@@ -4,7 +4,9 @@
   --text: #000000;
   --text-on-brand: #ffffff;
 
-  --header: var(--brand);
+  --header: #ff7b26;
+  --header-theme-toggle-fill: #ffffff;
+  --header-drop-shadow: 0 0 1rem 0.1rem rgba(0, 0, 0, 0.7);
 }
 
 :root[data-theme="dark"] {
@@ -14,4 +16,6 @@
   --text-on-brand: #ffffff;
 
   --header: #242424;
+  --header-theme-toggle-fill: #ff7b26;
+  --header-drop-shadow: 0 0 1rem 0.2rem rgba(0, 0, 0, 1);
 }

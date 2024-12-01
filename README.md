@@ -28,3 +28,31 @@ Try to stick to the design characteristics of SA as much as possible, I'll set u
 - [ ] Authentication - Scratch for community, Github for devs
 - [ ] "Roles" - dev, admin, etc
 - [ ] More
+
+Current supabase config in json, I am not too familar with supabase, but I think this is semi-right:
+
+```json
+{
+  "suggestion": {
+    "id": "unique-uuid-v4",
+    "title": "Descriptive title of the suggestion",
+    "description": "Detailed explanation of the suggestion",
+    "type": "Bug | Improvement | New Addon",
+    "status": "pending | in-progress | completed",
+    "tags": ["tag1", "tag2"],
+    "images": [
+      {
+        "id": "unique-file-identifier",
+        "url": "full-public-url-to-image",
+        "alt": "Descriptive alternative text"
+      }
+    ],
+    "votes": 0,
+    "author": {
+      "id": "user-unique-identifier",
+      "username": "display-username"
+    },
+    "createdAt": "ISO-8601-timestamp"
+  }
+}
+```
