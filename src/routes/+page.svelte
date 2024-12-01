@@ -2,23 +2,37 @@
   import Suggestion from "$lib/Suggestion.svelte";
 
   const { data } = $props();
-  const { suggestions } = data;
+  const { data: promise } = data;
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
-
-<div class="suggestions">
-  {#each suggestions as suggestion}
-    <Suggestion {...suggestion} />
-  {/each}
+<div class="suggestions-container">
+  {#await promise}
+    Loading suggestions...
+  {:then { data: suggestions }}
+    {#if suggestions}
+      <div class="suggestions">
+        {#each suggestions as suggestion}
+          <Suggestion {...suggestion} />
+        {/each}
+      </div>
+    {:else}
+      <h2>No suggestions found</h2>
+    {/if}
+  {:catch error}
+    <h2>An error occurred: {error}</h2>
+  {/await}
 </div>
 
 <style>
-  .suggestions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  .suggestions-container {
+    margin-block-start: 2rem;
+
+    .suggestions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      width: 100%;
+    }
   }
 </style>

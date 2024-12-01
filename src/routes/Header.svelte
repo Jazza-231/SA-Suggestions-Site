@@ -110,7 +110,7 @@
     }
 
     &:hover:not(.spin) {
-      background-color: color-mix(in srgb, white, transparent 20%);
+      background-color: color-mix(in srgb, white, transparent 50%);
 
       :global {
         svg {

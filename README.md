@@ -18,10 +18,10 @@ Try to stick to the design characteristics of SA as much as possible, I'll set u
 ## Todo
 
 - [x] Make a repo
-- [ ] Basic design
+- [x] Basic design
 - [x] Theme switch - kinda done
-- [ ] Displaying suggestions text
-- [ ] Displaying suggestions images
+- [x] Displaying suggestions text
+- [x] Displaying suggestions images
 - [ ] Submitting suggestions
 - [ ] Sorting suggestions
 - [ ] Pagination
