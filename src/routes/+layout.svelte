@@ -3,7 +3,7 @@
   import type { LayoutData } from "./$types";
   import "../vars.css";
   import "../app.css";
-  import Header from "$lib/Header.svelte";
+  import Header from "./Header.svelte";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>

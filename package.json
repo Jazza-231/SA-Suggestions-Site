@@ -12,7 +12,8 @@
     "test": "npm run test:e2e && npm run test:unit -- --run",
     "test:unit": "vitest",
     "lint": "eslint . && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "types": "pnpm supabase gen types typescript --project-id xypgqcuqofkkmwdbfqwr --schema public > database.types.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.3",
@@ -26,6 +27,7 @@
     "globals": "^15.0.0",
     "prettier": "^3.3.2",
     "prettier-plugin-svelte": "^3.2.6",
+    "supabase": ">=1.8.1",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "typescript": "^5.0.0",
