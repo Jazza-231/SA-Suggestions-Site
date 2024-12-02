@@ -11,8 +11,8 @@
   {:then { data: suggestions }}
     {#if suggestions}
       <div class="suggestions">
-        {#each suggestions as suggestion}
-          <Suggestion {...suggestion} />
+        {#each suggestions as suggestion, index}
+          <Suggestion {...suggestion} {index} />
         {/each}
       </div>
     {:else}

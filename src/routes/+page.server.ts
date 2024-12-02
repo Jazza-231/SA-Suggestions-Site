@@ -7,10 +7,14 @@ export type Suggestion = Omit<
   "author" | "images"
 > & {
   author: { id: string; username: string };
-  images: { id: string; alt: string; url: string }[];
+  images: { id: string; alt: string; url: string }[] | null;
 };
 
 export const load = (async () => {
-  const data = supabase.from("suggestions").select("*").returns<Suggestion[]>();
+  const data = supabase
+    .from("suggestions")
+    .select("*")
+    .order("createdAt", { ascending: false })
+    .returns<Suggestion[]>();
   return { data };
 }) satisfies PageServerLoad;
