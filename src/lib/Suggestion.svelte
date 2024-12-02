@@ -16,7 +16,7 @@
   }: Suggestion & { index: number } = $props();
 </script>
 
-<div class="suggestion" transition:fly|global={{ duration: 600, y: 100, delay: index * 200 }}>
+<div class="suggestion" transition:fly|global={{ duration: 400, y: 100, delay: index * 100 }}>
   <div class="left">
     <div class="title">
       <h2>{title}</h2>
@@ -50,7 +50,14 @@
   {#if images}
     <div class="images">
       {#each images as image}
-        <img src={image.url} alt={image.alt} />
+        <img
+          src={image.url}
+          alt={image.alt}
+          onload={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.style.opacity = "1";
+          }}
+        />
       {/each}
     </div>
   {/if}
@@ -75,7 +82,7 @@
     &:hover {
       transform: translateY(-0.2rem);
       z-index: 1;
-      box-shadow: 0 1rem 1rem 0.1rem rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0.5rem 1rem 0.1rem rgba(0, 0, 0, 0.3);
     }
 
     @media (width <= 768px) {
@@ -151,6 +158,8 @@
         width: auto;
         height: 10rem;
         border-radius: 0.6rem;
+        opacity: 0;
+        transition: opacity 200ms;
       }
     }
   }
