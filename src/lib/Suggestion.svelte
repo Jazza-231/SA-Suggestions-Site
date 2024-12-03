@@ -122,13 +122,20 @@
       display: flex;
       width: fit-content;
       min-width: 2rem;
-      padding: 0.4rem;
+      padding: 0.5rem;
       align-items: center;
       justify-content: center;
       border-radius: 1rem;
       gap: 0.3rem;
       background-color: var(--surface2);
-      transition: background-color 200ms;
+      transition:
+        background-color 200ms,
+        border 200ms;
+      border: transparent 1px solid;
+
+      &:hover {
+        border: color-mix(in srgb, var(--text) 80%, transparent) 1px solid;
+      }
 
       .votes-count {
         font-size: 1.1rem;
