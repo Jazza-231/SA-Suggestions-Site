@@ -49,16 +49,14 @@
 
   {#if images}
     <div class="images">
-      {#each images as image}
-        <img
-          src={image.url}
-          alt={image.alt}
-          onload={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.style.opacity = "1";
-          }}
-        />
-      {/each}
+      <img
+        src={images[0].url}
+        alt={images[0].alt}
+        onload={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.style.opacity = "1";
+        }}
+      />
     </div>
   {/if}
 </div>
@@ -148,7 +146,8 @@
       margin-left: 1rem;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: end;
+      min-width: 15rem;
 
       @media (width <= 768px) {
         margin-left: 0;
@@ -156,7 +155,9 @@
       }
       img {
         width: auto;
-        height: 10rem;
+        max-width: 15rem;
+        height: auto;
+        max-height: 15rem;
         border-radius: 0.6rem;
         opacity: 0;
         transition: opacity 200ms;
