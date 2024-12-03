@@ -1,41 +1,18 @@
 <script lang="ts">
-  import { Moon, Sun, Load } from "$lib/icons";
+  import { browser } from "$app/environment";
+  import { Sun, Moon } from "$lib/icons";
 
-  let flag = { first: false, allButFirst: false };
   let theme: "dark" | "light" = $state()!;
+  let setTheme: Function = $state()!;
 
-  let ThemeToggle = $state(Load);
+  if (browser) {
+    theme = localStorage.theme;
 
-  $effect(() => {
-    if (!flag.first) {
-      theme = document.documentElement.dataset.theme as typeof theme;
-
-      const userPrefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const userSetManually = document.documentElement.dataset.theme !== "";
-      if (!userSetManually) {
-        setTheme(userPrefersDarkMode ? "dark" : "light");
-      }
-
-      setTimeout(() => {
-        ThemeToggle = theme === "dark" ? Sun : Moon;
-      }, 1000);
-    }
-    flag.first = true;
-  });
-
-  $effect(() => {
-    theme;
-
-    if (flag.allButFirst) {
-      ThemeToggle = theme === "dark" ? Sun : Moon;
-    }
-    flag.allButFirst = true;
-  });
-
-  function setTheme(themeTo: "dark" | "light") {
-    theme = themeTo;
-    document.documentElement.dataset.theme = themeTo;
-    document.cookie = `siteTheme=${themeTo};max-age=31536000;path="/"`;
+    setTheme = function (themeTo: "dark" | "light") {
+      theme = themeTo;
+      document.documentElement.dataset.theme = themeTo;
+      localStorage.theme = themeTo;
+    };
   }
 
   function toggleTheme() {
@@ -50,13 +27,38 @@
       <span>Scratch Addons Suggestions</span>
     </a>
 
-    <button class="theme-toggle" onclick={toggleTheme} class:spin={ThemeToggle === Load}>
-      <ThemeToggle />
+    <button class="theme-toggle" onclick={toggleTheme}>
+      <div class="sun">
+        <Sun />
+      </div>
+      <div class="moon">
+        <Moon />
+      </div>
     </button>
   </nav>
 </header>
 
 <style>
+  :global {
+    :root {
+      .sun {
+        display: none;
+      }
+
+      .moon {
+        display: block;
+      }
+    }
+    :root[data-theme="dark"] {
+      .sun {
+        display: block;
+      }
+      .moon {
+        display: none;
+      }
+    }
+  }
+
   nav {
     background-color: var(--header);
     transition:
@@ -109,7 +111,7 @@
       }
     }
 
-    &:hover:not(.spin) {
+    &:hover {
       background-color: color-mix(in srgb, white, transparent 50%);
 
       :global {
@@ -119,18 +121,6 @@
           }
         }
       }
-    }
-
-    :global(&.spin) {
-      animation: spin 1s linear infinite;
-    }
-  }
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
     }
   }
 </style>
