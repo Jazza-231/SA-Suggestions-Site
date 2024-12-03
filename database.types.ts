@@ -13,7 +13,7 @@ export type Database = {
         Row: {
           author: Json
           createdAt: string
-          description: string | null
+          description: string
           id: string
           images: Json[] | null
           status: string | null
@@ -25,7 +25,7 @@ export type Database = {
         Insert: {
           author: Json
           createdAt?: string
-          description?: string | null
+          description: string
           id?: string
           images?: Json[] | null
           status?: string | null
@@ -37,7 +37,7 @@ export type Database = {
         Update: {
           author?: Json
           createdAt?: string
-          description?: string | null
+          description?: string
           id?: string
           images?: Json[] | null
           status?: string | null
