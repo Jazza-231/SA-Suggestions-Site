@@ -6,7 +6,7 @@ import { SCRATCH_AUTH_PASSWORD_SALT } from "$env/static/private";
 
 const redirectTo = dev
   ? "http://localhost:5173/auth/callback"
-  : "https://sa-suggestions-site.vercel.app//auth/callback";
+  : "https://sa-suggestions-site.vercel.app/auth/callback";
 
 function hashPassword(username: string, salt: string) {
   const initialHash = crypto
