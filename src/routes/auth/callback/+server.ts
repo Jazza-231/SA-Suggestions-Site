@@ -1,51 +1,20 @@
 import { dev } from "$app/environment";
 import { redirect } from "@sveltejs/kit";
+import crypto from "crypto";
 
 import { SCRATCH_AUTH_PASSWORD_SALT } from "$env/static/private";
 
 const redirectTo = dev
   ? "http://localhost:5173/auth/callback"
-  : "https://sa-suggestions.pages.dev/auth/callback";
+  : "https://sa-suggestions-site.vercel.app//auth/callback";
 
-async function hashPassword(username: string, salt: string) {
-  const initialHash = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(username + salt),
-  );
-  const initialHashHex = Array.from(new Uint8Array(initialHash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+function hashPassword(username: string, salt: string) {
+  const initialHash = crypto
+    .createHash("sha256")
+    .update(username + salt)
+    .digest("hex");
 
-  const keyMaterial = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(salt),
-    { name: "PBKDF2" },
-    false,
-    ["deriveBits", "deriveKey"],
-  );
-
-  const key = await crypto.subtle.deriveKey(
-    {
-      name: "PBKDF2",
-      salt: new TextEncoder().encode(salt),
-      iterations: 10000,
-      hash: "SHA-512",
-    },
-    keyMaterial,
-    { name: "HMAC", hash: "SHA-512", length: 256 },
-    false,
-    ["sign"],
-  );
-
-  const passwordBuffer = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    new TextEncoder().encode(initialHashHex),
-  );
-  return Array.from(new Uint8Array(passwordBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("")
-    .slice(0, 72);
+  return crypto.pbkdf2Sync(initialHash, salt, 10000, 32, "sha512").toString("hex").slice(0, 72);
 }
 
 export const GET = async (event) => {

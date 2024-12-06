@@ -1,10 +1,9 @@
 import { redirect, type Actions } from "@sveltejs/kit";
 import { dev } from "$app/environment";
-const { Buffer } = await import("buffer/"); // note: the trailing slash is important!
 
 const redirectTo = dev
   ? "http://localhost:5173/auth/callback"
-  : "https://sa-suggestions.pages.dev/auth/callback";
+  : "https://sa-suggestions-site.vercel.app//auth/callback";
 
 export const actions: Actions = {
   github: async ({ locals: { supabase } }) => {
