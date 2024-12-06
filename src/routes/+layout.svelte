@@ -7,7 +7,7 @@
   import { invalidate } from "$app/navigation";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
-  let { session, supabase } = data;
+  let { session, supabase } = $derived(data);
 
   $effect(() => {
     const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
