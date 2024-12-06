@@ -1,5 +1,5 @@
 import { dev } from "$app/environment";
-import { redirect } from "@sveltejs/kit";
+import { isRedirect, redirect } from "@sveltejs/kit";
 import crypto from "crypto";
 
 import { SCRATCH_AUTH_PASSWORD_SALT } from "$env/static/private";
@@ -9,7 +9,12 @@ const redirectTo = dev
   : "https://sa-suggestions.pages.dev/auth/callback";
 
 function hashPassword(username: string, salt: string) {
-  return crypto.pbkdf2Sync(username, salt, 10000, 64, "sha512").toString("hex");
+  const initialHash = crypto
+    .createHash("sha256")
+    .update(username + salt)
+    .digest("hex");
+
+  return crypto.pbkdf2Sync(initialHash, salt, 10000, 32, "sha512").toString("hex").slice(0, 72);
 }
 
 export const GET = async (event) => {
@@ -17,44 +22,65 @@ export const GET = async (event) => {
     url,
     locals: { supabase },
   } = event;
-  const code = url.searchParams.get("code") as string;
+  const code = url.searchParams.get("code");
   const next = url.searchParams.get("next") ?? "/";
-  console.log("🚀 ~ GET ~ next:", next);
-  const privateCode = url.searchParams.get("privateCode") as string;
+  const privateCode = url.searchParams.get("privateCode");
 
   if (privateCode) {
-    console.log("🚀 ~ GET ~ privateCode:", privateCode);
+    try {
+      const response = await fetch(
+        `https://auth.itinerary.eu.org/api/auth/verifyToken?privateCode=${privateCode}`,
+      );
+      const data = await response.json();
 
-    fetch(`https://auth.itinerary.eu.org/api/auth/verifyToken?privateCode=${privateCode}`, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then(async (data) => {
-        console.log("🚀 ~ .then ~ data:", data);
+      if (data.valid && data.redirect === redirectTo) {
+        const email = `sass-${data.username}@jazza.dev`;
+        const password = hashPassword(data.username, SCRATCH_AUTH_PASSWORD_SALT);
 
-        if (data.valid && data.redirect === redirectTo) {
-          const email = `sass-${data.username}@jazza.dev`;
-          const password = hashPassword(data.username, SCRATCH_AUTH_PASSWORD_SALT);
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-          let { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) {
+          const { error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                username: data.username,
+              },
+            },
+          });
 
-          if (!error) throw redirect(302, "/");
-
-          ({ error } = await supabase.auth.signUp({ email, password }));
-
-          if (!error) throw redirect(302, "/");
-
-          throw redirect(302, "/auth/auth-code-error");
+          if (signUpError) {
+            console.error("Authentication error:", signUpError);
+            redirect(302, "/auth/auth-code-error");
+          }
         }
-      });
+
+        redirect(307, `/${next.slice(1)}`);
+      }
+
+      redirect(302, "/auth/auth-code-error");
+    } catch (error) {
+      if (isRedirect(error) && error.status === 307) {
+        redirect(302, error.location);
+      } else {
+        console.error("Authentication process error:", error);
+        redirect(302, "/auth/auth-code-error");
+      }
+    }
   }
 
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      throw redirect(302, `/${next.slice(1)}`);
+      redirect(302, `/${next.slice(1)}`);
     }
   }
 
-  throw redirect(302, "/auth/auth-code-error");
+  // No valid authentication method found
+  console.error("No valid authentication method found");
+  redirect(302, "/auth/auth-code-error");
 };

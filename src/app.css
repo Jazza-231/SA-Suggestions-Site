@@ -19,13 +19,15 @@ button {
   cursor: pointer;
   transition:
     background-color 200ms,
-    color 200ms;
+    color 200ms,
+    transform 200ms,
+    box-shadow 200ms;
 
   background-color: var(--brand);
   color: var(--text-on-brand);
 
   &:hover {
-    background-color: color-mix(in srgb, var(--brand) 80%, black);
+    transform: scale(1.1);
   }
 }
 

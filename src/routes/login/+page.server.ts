@@ -1,19 +1,28 @@
 import { redirect, type Actions } from "@sveltejs/kit";
 import { dev } from "$app/environment";
 
+const redirectTo = dev
+  ? "http://localhost:5173/auth/callback"
+  : "https://sa-suggestions.pages.dev/auth/callback";
+
 export const actions: Actions = {
   github: async ({ locals: { supabase } }) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: dev
-          ? "http://localhost:5173/auth/callback"
-          : "https://sa-suggestions.pages.dev/auth/callback",
+        redirectTo,
       },
     });
 
     if (data.url) redirect(302, data.url);
+    if (error) throw error;
+  },
+  scratch: async () => {
+    const redirectLocation = Buffer.from(redirectTo).toString("base64");
 
-    console.log({ data, error });
+    redirect(
+      302,
+      `https://auth.itinerary.eu.org/auth/?redirect=${redirectLocation}&name=Scratch Addons Suggestions`,
+    );
   },
 };

@@ -5,4 +5,13 @@
   let { user } = $derived(data);
 </script>
 
-<h1>Account of {user?.identities?.[0].identity_data?.name}</h1>
+<div class="account">
+  <h1>Account of {user?.user_metadata?.name || user?.user_metadata?.username}</h1>
+</div>
+
+<style>
+  .account {
+    display: flex;
+    justify-content: center;
+  }
+</style>

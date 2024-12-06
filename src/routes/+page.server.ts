@@ -21,7 +21,7 @@ export const load = (async ({ locals: { supabase } }) => {
       .returns<Suggestion[]>())();
 
   query.catch((error) => {
-    console.error(error);
+    console.log("🚀 ~ load ~ error:", error);
   });
 
   return { suggestions: query };
