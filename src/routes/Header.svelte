@@ -137,13 +137,17 @@
       justify-content: center;
       align-items: center;
 
-      :global {
-        svg {
-          height: 1.5rem;
-          width: 1.5rem;
-          path {
-            fill: var(--header-theme-toggle-fill);
-            transition: fill 200ms;
+      div {
+        height: 1.5rem;
+
+        :global {
+          svg {
+            height: 1.5rem;
+            width: 1.5rem;
+            path {
+              fill: var(--header-theme-toggle-fill);
+              transition: fill 200ms;
+            }
           }
         }
       }
