@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Suggestion } from "../routes/+page.server";
   import potat from "$lib/images/Potat.svg";
-  import { fly } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
 
   const {
     title,
@@ -12,11 +12,35 @@
     author,
     createdAt,
     images,
+    notes,
+    status,
     index,
-  }: Suggestion & { index: number } = $props();
+    length,
+  }: Suggestion & { index: number; length: number } = $props();
+
+  function reverseStaggeredDelay(
+    length: number,
+    index: number,
+    duration: number,
+    delay: number,
+    max: number,
+  ) {
+    // If the total duration of the animation is greater than the max,
+    // skip the elements later in the list (aka the ones with the smallest delay)
+    const totalDuration = length * duration + length * delay;
+    const trimOff = totalDuration - max;
+    const transitionsToSkip = Math.ceil(trimOff / (duration + delay));
+    if (length - index <= transitionsToSkip) return { duration, delay: 0 };
+
+    return { duration, delay: (length - transitionsToSkip) * delay - index * delay };
+  }
 </script>
 
-<div class="suggestion" transition:fly|global={{ duration: 400, y: 100, delay: index * 100 }}>
+<div
+  class="suggestion"
+  in:fly|global={{ duration: 400, y: 100, delay: index * 100 }}
+  out:fade|global={reverseStaggeredDelay(length, index, 200, 25, 1000)}
+>
   <div class="left">
     <div class="title">
       <h2>{title}</h2>
@@ -168,6 +192,7 @@
         border-radius: 0.6rem;
         opacity: 0;
         transition: opacity 200ms;
+        box-shadow: -0.4rem 0.4rem 1rem 0 rgba(0, 0, 0, 0.4);
       }
     }
   }

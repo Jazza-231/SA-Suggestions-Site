@@ -1,9 +1,12 @@
 <script lang="ts">
   import { browser } from "$app/environment";
+  import { goto } from "$app/navigation";
   import { Sun, Moon } from "$lib/icons";
+  import Profile from "$lib/icons/Profile.svelte";
 
   let theme: "dark" | "light" = $state()!;
   let setTheme: Function = $state()!;
+  const user = $state({ loggedIn: false });
 
   if (browser) {
     theme = localStorage.theme;
@@ -18,6 +21,10 @@
   function toggleTheme() {
     setTheme(theme === "dark" ? "light" : "dark");
   }
+
+  function login() {
+    if (location.pathname !== "/login") goto("/login");
+  }
 </script>
 
 <header>
@@ -27,14 +34,25 @@
       <span>Scratch Addons Suggestions</span>
     </a>
 
-    <button class="theme-toggle" onclick={toggleTheme}>
-      <div class="sun">
-        <Sun />
+    <div class="right">
+      <div class="user">
+        {#if user.loggedIn}
+          <button class="profile button">
+            <Profile />
+          </button>
+        {:else}
+          <button class="login button" onclick={login}>Login</button>
+        {/if}
       </div>
-      <div class="moon">
-        <Moon />
-      </div>
-    </button>
+      <button class="theme-toggle" onclick={toggleTheme}>
+        <div class="sun">
+          <Sun />
+        </div>
+        <div class="moon">
+          <Moon />
+        </div>
+      </button>
+    </div>
   </nav>
 </header>
 
@@ -59,6 +77,11 @@
     }
   }
 
+  header {
+    display: flex;
+    justify-content: center;
+  }
+
   nav {
     background-color: var(--header);
     transition:
@@ -69,6 +92,9 @@
     align-items: center;
     justify-content: space-between;
     box-shadow: var(--header-drop-shadow);
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    width: 80%;
 
     .icon {
       display: inline-flex;
@@ -89,35 +115,67 @@
     }
   }
 
-  .theme-toggle {
-    background-color: var(--header);
-    transition: background-color 200ms;
-    border: none;
-    padding: 0.5rem;
-    margin: 0.5rem;
-    border-radius: 0.3rem;
+  .right {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: end;
+    gap: 0.5rem;
 
-    :global {
-      svg {
-        height: 1.5rem;
-        width: 1.5rem;
-        path {
-          fill: var(--header-theme-toggle-fill);
-          transition: fill 200ms;
+    .theme-toggle {
+      background-color: var(--header);
+      transition: background-color 200ms;
+      border: none;
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 0.3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      :global {
+        svg {
+          height: 1.5rem;
+          width: 1.5rem;
+          path {
+            fill: var(--header-theme-toggle-fill);
+            transition: fill 200ms;
+          }
+        }
+      }
+
+      &:hover {
+        background-color: color-mix(in srgb, white, transparent 50%);
+
+        :global {
+          svg > path {
+            fill: black;
+          }
         }
       }
     }
 
-    &:hover {
-      background-color: color-mix(in srgb, white, transparent 50%);
+    .user {
+      .profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        :global {
+          svg {
+            height: 1.5rem;
+            width: 1.5rem;
 
-      :global {
-        svg {
-          path {
-            fill: black;
+            path {
+              fill: var(--header-theme-toggle-fill);
+              transition: fill 200ms;
+            }
+          }
+        }
+
+        &:hover {
+          :global {
+            svg > path {
+              fill: black;
+            }
           }
         }
       }

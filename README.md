@@ -29,7 +29,7 @@ Try to stick to the design characteristics of SA as much as possible, I'll set u
 - [ ] "Roles" - dev, admin, etc
 - [ ] More
 
-Current supabase config in json, I am not too familar with supabase, but I think this is semi-right:
+Current supabase config in json, I am not too familar with supabase, but I think this is semi-right; Please note these are not JS types nor supabase types, so they need to be converted accordingly:
 
 ```json
 {
@@ -37,9 +37,10 @@ Current supabase config in json, I am not too familar with supabase, but I think
     "id": "unique-uuid-v4",
     "title": "Descriptive title of the suggestion",
     "description": "Detailed explanation of the suggestion",
-    "type": "Bug | Improvement | New Addon",
-    "status": "pending | in-progress | completed",
-    "tags": ["tag1", "tag2"],
+    "type": "bug | improvement | new",
+    "status": "pending | good | done | in-progress | rejected",
+    "notes": "Notes on the status set by a dev - why rejected etc",
+    "tags": ["editor | website | other | string"],
     "images": [
       {
         "id": "unique-file-identifier",
@@ -47,7 +48,7 @@ Current supabase config in json, I am not too familar with supabase, but I think
         "alt": "Descriptive alternative text"
       }
     ],
-    "votes": 0,
+    "votes": "number",
     "author": {
       "id": "user-unique-identifier",
       "username": "display-username"

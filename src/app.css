@@ -4,8 +4,27 @@ body {
   color: var(--text);
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  scrollbar-gutter: stable both-edges;
 
   transition:
     background-color 200ms,
     color 200ms;
+}
+
+button {
+  background-color: transparent;
+  color: var(--text-on-brand);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 200ms,
+    color 200ms;
+
+  &:hover {
+    background-color: color-mix(in srgb, white 50%, transparent);
+    color: var(--text);
+  }
 }
