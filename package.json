@@ -38,6 +38,7 @@
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.46.2",
-    "@sveltejs/adapter-cloudflare": "^4.8.0"
+    "@sveltejs/adapter-cloudflare": "^4.8.0",
+    "buffer": "^6.0.3"
   }
 }

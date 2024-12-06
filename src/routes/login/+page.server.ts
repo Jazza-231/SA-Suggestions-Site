@@ -1,5 +1,6 @@
 import { redirect, type Actions } from "@sveltejs/kit";
 import { dev } from "$app/environment";
+const { Buffer } = await import("buffer/"); // note: the trailing slash is important!
 
 const redirectTo = dev
   ? "http://localhost:5173/auth/callback"

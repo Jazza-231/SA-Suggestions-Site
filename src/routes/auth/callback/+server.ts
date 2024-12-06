@@ -1,5 +1,5 @@
 import { dev } from "$app/environment";
-import { isRedirect, redirect } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 
 import { SCRATCH_AUTH_PASSWORD_SALT } from "$env/static/private";
 
@@ -58,50 +58,41 @@ export const GET = async (event) => {
   const privateCode = url.searchParams.get("privateCode");
 
   if (privateCode) {
-    try {
-      const response = await fetch(
-        `https://auth.itinerary.eu.org/api/auth/verifyToken?privateCode=${privateCode}`,
-      );
-      const data = await response.json();
+    const response = await fetch(
+      `https://auth.itinerary.eu.org/api/auth/verifyToken?privateCode=${privateCode}`,
+    );
+    const data = await response.json();
 
-      if (data.valid && data.redirect === redirectTo) {
-        const email = `sass-${data.username}@jazza.dev`;
-        const password = await hashPassword(data.username, SCRATCH_AUTH_PASSWORD_SALT);
+    if (data.valid && data.redirect === redirectTo) {
+      const email = `sass-${data.username}@jazza.dev`;
+      const password = await hashPassword(data.username, SCRATCH_AUTH_PASSWORD_SALT);
 
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              username: data.username,
+            },
+          },
         });
 
-        if (signInError) {
-          const { error: signUpError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              data: {
-                username: data.username,
-              },
-            },
-          });
-
-          if (signUpError) {
-            console.error("Authentication error:", signUpError);
-            redirect(302, "/auth/auth-code-error");
-          }
+        if (signUpError) {
+          console.error("Authentication error:", signUpError);
+          redirect(302, "/auth/auth-code-error");
         }
-
-        redirect(307, `/${next.slice(1)}`);
       }
 
-      redirect(302, "/auth/auth-code-error");
-    } catch (error) {
-      if (isRedirect(error) && error.status === 307) {
-        redirect(302, error.location);
-      } else {
-        console.error("Authentication process error:", error);
-        redirect(302, "/auth/auth-code-error");
-      }
+      redirect(307, `/${next.slice(1)}`);
     }
+
+    redirect(302, "/auth/auth-code-error");
   }
 
   if (code) {
