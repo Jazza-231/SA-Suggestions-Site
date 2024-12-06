@@ -4,9 +4,10 @@
   import { Sun, Moon } from "$lib/icons";
   import Profile from "$lib/icons/Profile.svelte";
 
+  const { session } = $props();
+
   let theme: "dark" | "light" = $state()!;
   let setTheme: Function = $state()!;
-  const user = $state({ loggedIn: false });
 
   if (browser) {
     theme = localStorage.theme;
@@ -25,6 +26,10 @@
   function login() {
     if (location.pathname !== "/login") goto("/login");
   }
+
+  function account() {
+    if (location.pathname !== "/account") goto("/account");
+  }
 </script>
 
 <header>
@@ -36,8 +41,8 @@
 
     <div class="right">
       <div class="user">
-        {#if user.loggedIn}
-          <button class="profile button">
+        {#if session}
+          <button class="profile button" onclick={account}>
             <Profile />
           </button>
         {:else}

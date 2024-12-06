@@ -12,8 +12,6 @@ body {
 }
 
 button {
-  background-color: transparent;
-  color: var(--text-on-brand);
   border: none;
   padding: 0.5rem;
   border-radius: 0.5rem;
@@ -22,6 +20,17 @@ button {
   transition:
     background-color 200ms,
     color 200ms;
+
+  background-color: var(--brand);
+  color: var(--text-on-brand);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--brand) 80%, black);
+  }
+}
+
+header button {
+  background-color: transparent;
 
   &:hover {
     background-color: color-mix(in srgb, white 50%, transparent);

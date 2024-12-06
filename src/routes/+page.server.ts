@@ -1,4 +1,3 @@
-import { supabase } from "$lib/supabaseClient";
 import type { PageServerLoad } from "./$types";
 import type { Database } from "../../database.types";
 
@@ -13,7 +12,7 @@ export type Suggestion = Omit<
   "author" | "images"
 > & { author: author } & { images: images } & { type: type } & { status: status } & { tags: tags };
 
-export const load = (async () => {
+export const load = (async ({ locals: { supabase } }) => {
   const query = (async () =>
     await supabase
       .from("suggestions")

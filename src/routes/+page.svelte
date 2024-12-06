@@ -9,7 +9,7 @@
 
 <div class="suggestions-container">
   {#await query}
-    <div class="loading" out:fade|global={{ duration: 200 }}>
+    <div class="loading" in:fade|global={{ duration: 200 }} out:fade|global={{ duration: 200 }}>
       <Load />
     </div>
   {:then { data: suggestions }}
