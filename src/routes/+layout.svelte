@@ -5,6 +5,9 @@
   import "../app.css";
   import Header from "./Header.svelte";
   import { invalidate } from "$app/navigation";
+  import { injectAnalytics } from "@vercel/analytics/sveltekit";
+
+  injectAnalytics();
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
   let { session, supabase } = $derived(data);
