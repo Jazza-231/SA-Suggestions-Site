@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { dev } from "$app/environment";
   import Load from "$lib/icons/Load.svelte";
   import Suggestion from "$lib/Suggestion.svelte";
   import { fade } from "svelte/transition";
 
   const { data } = $props();
   const { suggestions: query } = data;
+
+  console.log(dev);
 </script>
 
 <div class="suggestions-container">
