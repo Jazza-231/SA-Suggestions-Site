@@ -6,8 +6,10 @@
   import Header from "./Header.svelte";
   import { invalidate } from "$app/navigation";
   import { injectAnalytics } from "@vercel/analytics/sveltekit";
+  import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
 
   injectAnalytics();
+  injectSpeedInsights();
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
   let { session, supabase } = $derived(data);
