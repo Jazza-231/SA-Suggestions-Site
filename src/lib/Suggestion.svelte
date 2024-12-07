@@ -178,14 +178,15 @@
       display: flex;
       align-items: center;
       justify-content: end;
-      min-width: 15rem;
+      min-width: 12rem;
 
       @media (width <= 768px) {
         margin-left: 0;
         margin-block-start: 1.5rem;
+        justify-content: center;
       }
       img {
-        width: auto;
+        width: -webkit-fill-available;
         max-width: 15rem;
         height: auto;
         max-height: 15rem;

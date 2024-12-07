@@ -116,6 +116,10 @@
 
       span {
         font-size: 1.2rem;
+
+        @media (width <= 768px) {
+          display: none;
+        }
       }
     }
   }
