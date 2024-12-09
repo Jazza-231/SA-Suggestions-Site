@@ -3,7 +3,7 @@ import { dev } from "$app/environment";
 
 const redirectTo = dev
   ? "http://localhost:5173/auth/callback"
-  : "https://sa-suggestions-site.vercel.app/auth/callback";
+  : "https://old-sa-suggestions-site.vercel.app/auth/callback";
 
 export const actions: Actions = {
   github: async ({ locals: { supabase } }) => {
